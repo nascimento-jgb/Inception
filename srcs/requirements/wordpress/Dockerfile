@@ -1,31 +1,13 @@
 FROM debian:bullseye
 
-WORKDIR /
+RUN apt update -y 
+RUN apt install php-fpm php-mysql mariadb-client -y
+RUN apt install curl -y
 
-RUN apt-get update && apt-get -y upgrade
-RUN apt-get -y install php \
-wget \
-mariadb-client \
-apache2 \
-sendmail \
-php-fpm \
-wordpress
+COPY ./tools/wordpress.sh /
+RUN chmod +x /wordpress.sh
+COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/
 
-#Create the folder to enable php start
-RUN mkdir -p /run/php && mkdir -p /var/www/html
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/www.conf
+RUN mkdir /run/php
 
-# Install wp-cli
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
-    chmod +x wp-cli.phar && \
-    mv wp-cli.phar /usr/local/bin/wp
-
-WORKDIR /var/www/html
-
-#Copy the necessary tools to wordpress dir
-COPY ./tools/wordpress_config.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/wordpress_config.sh
-
-EXPOSE 9000
-
-CMD ["wordpress_config.sh"]
+CMD [ "/wordpress.sh" ]

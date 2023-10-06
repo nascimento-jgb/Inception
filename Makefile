@@ -16,7 +16,7 @@ clean:
 fclean: clean
 	@if [ -d "/var/jonascim/data" ]; then \
 	rm -rf /var/jonascim/data/* && \
-	echo "successfully removed all contents from /var/jonascim/data"; \
+	echo "successfully removed all contents from /home/jonascim/data"; \
 	fi;
 
 prune:

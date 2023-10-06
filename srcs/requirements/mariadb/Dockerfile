@@ -1,19 +1,16 @@
 FROM debian:bullseye
 
-WORKDIR /
+RUN apt-get update -y && apt-get install mariadb-server mariadb-client -y
 
-# Install necessary packages
-RUN apt-get update && apt-get -y upgrade && apt-get -y install mariadb-server \
-&& rm -rf /var/lib/apt/lists/*
-
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/50-serverer.cnf
+COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
 RUN chmod 644 /etc/mysql/mariadb.conf.d/50-server.cnf
 
+COPY ./tools/mariadb.sh /
+
 WORKDIR /
 
-COPY ./tools/create_db.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/create_db.sh
+RUN chmod +x ./mariadb.sh
 
 EXPOSE 3306
 
-CMD ["create_db.sh"]
+CMD ["/mariadb.sh"]

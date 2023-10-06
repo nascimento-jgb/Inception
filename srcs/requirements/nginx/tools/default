@@ -30,9 +30,9 @@ server
     }
 
 # SSL Settings
-	ssl_certificate /etc/ssl/jonascim.42.fr.pem;
-	ssl_certificate_key /etc/ssl/jonascim.42.fr.key;
-	ssl_protocols TLSv1.3;
+	ssl_certificate /etc/nginx/ssl/jonascim.crt;
+	ssl_certificate_key /etc/nginx/ssl/jonascim.key;
+	ssl_protocols TLSv1.2 TLSv1.3;
 	ssl_prefer_server_ciphers off;
 
 # Error management

@@ -1,19 +1,15 @@
-#Precise with what our image will be built
 FROM debian:bullseye
 
-WORKDIR /
+RUN apt-get update && apt-get install -y nginx openssl
 
-#Install nginx with RUN
-RUN apt-get update && apt-get -y install nginx openssl \
-&& rm -rf /var/lib/apt/lists/*
-
-#Generate a self certificate
 RUN mkdir -m 775 /etc/nginx/ssl
-RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes -out /etc/ssl/jonascim.42.fr.pem -keyout /etc/ssl/jonascim.42.fr.key -subj "/C=FI/ST=Helsinki/L=Helsinki/O=42 School/OU=jonascim/CN=jonascim.42.fr"
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+	-keyout /etc/nginx/ssl/jonascim.key \
+	-out /etc/nginx/ssl/jonascim.crt \
+	-subj "/C=FI/ST=Helsinki/L=Helsiniki/O=Hive/OU=jonascim/CN=jonascim/"
 
-#Copy the configuration to inside of nginx dir
-COPY ./tools/default /etc/nginx/sites-available/default
-COPY ./conf/nginx.conf /etc/nginx/
+COPY tools/default /etc/nginx/sites-available/default
+COPY conf/nginx.conf /etc/nginx/nginx
 
 EXPOSE 443
 
