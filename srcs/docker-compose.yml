@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+    nginx:
+      container_name: nginx
+      build: requirements/nginx
+      image: nginx:jonascim_final
+      depends_on:
+        - wordpress
+      networks:
+        - docker_network
+      ports:
+        - "443:443"
+      volumes:
+        - wordpress_data:/var/www/html
+      restart: always
+      env_file: .env
+
+    mariadb:
+      container_name: mariadb
+      build: requirements/mariadb
+      image: mariadb:v_final
+      networks:
+        - docker_network
+      volumes:
+        - db_data:/var/lib/mysql
+      restart: always
+      env_file: .env
+      environment:
+        - DB_DATABASE=${MYSQL_DATABASE}
+        - DB_USER=${MYSQL_USER}
+        - DB_PASSWORD=${MYSQL_PASSWORD}
+        - DB_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+    wordpress:
+      container_name: wordpress
+      build: requirements/wordpress
+      image: wordpress:jonascim_final
+      depends_on: 
+        - mariadb
+      networks:
+        - docker_network
+      volumes:
+        - wordpress_data:/var/www/html
+      restart: always
+      env_file: .env
+      environment:
+        - MYSQL_HOSTNAME=${MYSQL_HOSTNAME}
+        - MYSQL_DATABASE=${MYSQL_DATABASE}
+        - MYSQL_USER=${MYSQL_USER}
+        - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+        - WP_ADMIN_USER=${WP_ADMIN_USER}
+        - WP_ADMIN_PASSWORD=${WP_ADMIN_PASSWORD}
+        - WP_ADMIN_EMAIL=${WP_ADMIN_EMAIL}
+        - WP_USER=${WP_USER} 
+        - WP_USER_EMAIL=${WP_USER_EMAIL}
+        - WP_ROLE=${WP_ROLE}
+        - WP_USER_PASSWORD=${WP_USER_PASSWORD}
+
+networks:
+    docker_network:
+
+volumes:
+    wordpress_data:
+      driver: local
+      driver_opts:
+        type: none
+        device: /home/jonascim/data/wordpress
+        o: bind
+    db_data:
+      driver: local
+      driver_opts:
+        type: none
+        device: /home/jonascim/data/mysql
+        o: bind
