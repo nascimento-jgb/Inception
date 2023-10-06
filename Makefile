@@ -1,9 +1,9 @@
 all:
-	@if [ ! -d "/var/jonascim/data/mysql" ]; then \
-		mkdir -p /var/jonascim/data/mysql; \
+	@if [ ! -d "/home/jonascim/data/mysql" ]; then \
+		mkdir -p /home/jonascim/data/mysql; \
 	fi
-	@if [ ! -d "/var/jonascim/data/html" ]; then \
-		mkdir -p /var/jonascim/data/html; \
+	@if [ ! -d "/home/jonascim/data/html" ]; then \
+		mkdir -p /home/jonascim/data/html; \
 	fi
 	docker-compose -f ./srcs/docker-compose.yml up -d
 
@@ -14,8 +14,8 @@ clean:
 	docker-compose -f ./srcs/docker-compose.yml down --rmi all -v
 
 fclean: clean
-	@if [ -d "/var/jonascim/data" ]; then \
-	rm -rf /var/jonascim/data/* && \
+	@if [ -d "/home/jonascim/data" ]; then \
+	rm -rf /home/jonascim/data/* && \
 	echo "successfully removed all contents from /home/jonascim/data"; \
 	fi;
 

@@ -49,12 +49,12 @@ volumes:
       driver: local
       driver_opts:
         type: none
-        device: /var/jonascim/data/html
+        device: /home/jonascim/data/html
         o: bind
     mariadb:
       name: mariadb
       driver: local
       driver_opts:
         type: none
-        device: /var/jonascim/data/mysql
+        device: /home/jonascim/data/mysql
         o: bind
